@@ -4,3 +4,5 @@
 
 /EmployeeManager.Api/bin/Debug/net5.0
 /EmployeeManager.Api/obj
+/EmployeeManager.Mvc/bin/Debug/net5.0
+/EmployeeManager.Mvc/obj
