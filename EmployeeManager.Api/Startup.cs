@@ -41,6 +41,8 @@ namespace EmployeeManager.Api
             services.AddScoped<IEmployeeRepository, EmployeeSqlRepository>();
             services.AddScoped<ICountryRepository, CountrySqlRepository>();
 
+            services.AddCors();
+
             //services.AddScoped<IEmployeeRepository, EmployeeStProcRepository>();
             //services.AddScoped<ICountryRepository, CountryStProcRepository>();
 
@@ -59,6 +61,11 @@ namespace EmployeeManager.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(builder => builder           
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
             {
