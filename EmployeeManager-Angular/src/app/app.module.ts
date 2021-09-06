@@ -13,13 +13,23 @@ import { AppComponent } from './app.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { EmployeeInsertComponent } from './employee-insert/employee-insert.component';
 import { EmployeeUpdateComponent } from './employee-update/employee-update.component';
+import { EmployeeDeleteComponent } from './employee-delete/employee-delete.component';
+import { SignOutComponentComponent } from './sign-out-component/sign-out-component.component';
+// import { SigInComponentComponent } from './sig-in-component/sig-in-component.component';
+// import { SignOutComponentComponent } from './sign-out-component/sign-out-component.component';
+// import { SignInComponentComponent } from './sign-in-component/sign-in-component.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeListComponent,
     EmployeeInsertComponent,
-    EmployeeUpdateComponent
+    EmployeeUpdateComponent,
+    EmployeeDeleteComponent,
+    SignOutComponentComponent
+    // SigInComponentComponent,
+    // SignOutComponentComponent,
+    // SignInComponentComponent
   ],
   imports: [
     BrowserModule,

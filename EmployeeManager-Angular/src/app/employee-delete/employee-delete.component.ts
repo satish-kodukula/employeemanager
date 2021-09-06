@@ -4,22 +4,23 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CountriesApiService } from '../countries-api/countries-api.service';
 import { EmployeesApiService } from '../employees-api/employees-api.service';
 import { Country } from '../models/country';
+import { Employee } from '../models/employee';
 
 @Component({
-  selector: 'app-employee-update',
-  templateUrl: './employee-update.component.html',
-  styleUrls: ['./employee-update.component.css']
+  selector: 'app-employee-delete',
+  templateUrl: './employee-delete.component.html',
+  styleUrls: ['./employee-delete.component.css']
 })
-export class EmployeeUpdateComponent implements OnInit {
+export class EmployeeDeleteComponent implements OnInit {
   formBuilder: FormBuilder;
   route: ActivatedRoute;
   id: number;
   router: Router;
   employeesApi: EmployeesApiService;
   countriesApi: CountriesApiService;
-  updateForm: FormGroup;
+  deleteForm: FormGroup;
   message: string;
-  countries: Array<Country>;
+  employee: Employee;
   
   constructor(formBuilder: FormBuilder,
     router: Router,
@@ -31,53 +32,57 @@ export class EmployeeUpdateComponent implements OnInit {
       this.router = router;
       this.employeesApi = employeesApi;
       this.countriesApi = countriesApi;
+
       if (this.route.snapshot.params["id"]) {
         this.id = this.route.snapshot.params["id"];
       }
     
-      this.updateForm = this.formBuilder.group({
-        employeeID: ['', [Validators.required]],
-        firstName: ['', [Validators.required, Validators.maxLength(10)]],
-        lastName: ['', [Validators.required, Validators.maxLength(20)]],
-        title: ['', [Validators.required, Validators.maxLength(30)]],
-        birthDate: ['', [Validators.required]],
-        hireDate: ['', [Validators.required]],
-        country: ['', [Validators.required, Validators.maxLength(15)]],
-        notes: ['', [Validators.maxLength(500)]]
+      this.deleteForm = this.formBuilder.group({
+        employeeID: ['', [Validators.required]]
       });
+
 
     }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    
+    if (!sessionStorage.hasOwnProperty("token")) {
+      this.router.navigate(["/signin"]);
+    }
+
     this.employeesApi.selectByID(this.id)
     .subscribe((data:any) => {
-      data.birthDate = data.birthDate.substring(0,10);
-      data.hireDate = data.hireDate.substring(0,10);
-      this.updateForm.setValue(data);
+      this.employee = data as Employee;
+        this.deleteForm.controls['employeeID'].setValue(this.employee.employeeID);
     }, error => {
-        if(error.status === 401) {
-          this.router.navigate(["/signin"])
-        }
-        this.message = error.message;        
-    });    
+      if (error.status === 401) {
+        this.router.navigate(["/signin"]);
+      }
+      this.message = error.message
+    });  
   }
 
-  cancel_click() {
-    this.router.navigate(["/employees/list"]);
-  }
-
-  save_click() {
-    if (this.updateForm.invalid) {
+  delete_click() {
+    if (this.deleteForm.invalid) {
       this.message = "One or more values are invalid.";
       return;
     }
-
-      this.employeesApi.update(this.updateForm.value)
-          .subscribe(() => this.message = "Employee updated successfully!", error => {
+      this.employeesApi.delete(this.deleteForm.controls["employeeID"].value)
+          .subscribe(() => {
+              sessionStorage.setItem("message", "Employee deleted successfully!"
+              );
+              this.router.navigate(['/employees/list']);
+          }, error => {
               if (error.status === 401) {
                   this.router.navigate(["/signin"]);
               }
               this.message = error.message
           });
   }
+
+
+  cancel_click() {
+    this.router.navigate(["/employees/list"]);
+  }
 }
+

@@ -35,7 +35,7 @@ namespace EmployeeManager.Api.Repositories
 
         public Employee SelectByID(int id)
         {
-            Employee emp = db.Employees.FromSqlRaw("SELECT EmployeeID, FirstName, LastName, Title, BirthDate, HireDate, Country, Notes FROM Employees WHERE EmployeeID ={ 0} ", id).SingleOrDefault();
+            Employee emp = db.Employees.FromSqlRaw("SELECT EmployeeID, FirstName, LastName, Title, BirthDate, HireDate, Country, Notes FROM Employees WHERE EmployeeID = {0}", id).SingleOrDefault();
             return emp;
         }
 
